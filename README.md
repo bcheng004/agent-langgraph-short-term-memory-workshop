@@ -1,4 +1,6 @@
-# Responses API Agent (Short-Term Memory)
+# Responses API Agent (Short-Term Memory) — Workshop
+
+This repo is based on the [agent-langgraph-short-term-memory](https://github.com/databricks/app-templates/tree/main/agent-langgraph-short-term-memory) app template but has been adapted for a workshop-style format.
 
 ## Build with AI Assistance
 
@@ -215,7 +217,21 @@ Ensure you have the [Databricks CLI](https://docs.databricks.com/aws/en/dev-tool
    databricks bundle deploy
    ```
 
-4. **Start or restart the app**
+4. **Grant Lakebase permissions to your App's Service Principal**
+
+   After deploying, you need to ensure your app has access to the necessary Lakebase tables for memory. The Lakebase instance is already configured as a resource in `databricks.yml`, but you'll need to grant Postgres-level permissions on schemas and tables that were created during local testing.
+
+   You can use the provided script to automatically grant Lakebase permissions to your app's service principal:
+
+   ```bash
+   uv run python scripts/grant_lakebase_permissions.py --app-name <app-name> --memory-type <type> --project <project> --branch <branch>
+   ```
+
+   > **Autoscaling Lakebase instances:** If your Lakebase instance is autoscaling (not provisioned), the postgres resource is **not yet supported** as a resource dependency in `databricks.yml`. After `databricks bundle run`, you must manually add the postgres resource to your app via the Databricks API, grant permissions, and then redeploy the app. See the [autoscaling Lakebase setup guide](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/lakebase) for detailed steps. Note that `databricks bundle deploy` will overwrite app resources, so you must re-add the postgres resource after each bundle deploy.
+
+   **Alternatively, for provisioned Lakebase instances**, you can run the following SQL commands manually on your Lakebase instance (replace `app-sp-id` with your app's service principal UUID):
+
+5. **Start or restart the app**
 
    ```bash
    databricks bundle run agent_langgraph_short_term_memory
@@ -226,14 +242,6 @@ Ensure you have the [Databricks CLI](https://docs.databricks.com/aws/en/dev-tool
    To grant access to additional resources (serving endpoints, genie spaces, UC Functions, Vector Search), add them to `databricks.yml` and redeploy. See the [Databricks Apps resources documentation](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/resources).
 
    **On-behalf-of (OBO) User Authentication**: Use `get_user_workspace_client()` from `agent_server.utils` to authenticate as the requesting user instead of the app service principal. See the [OBO authentication documentation](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth?language=Streamlit#retrieve-user-authorization-credentials).
-
-5. **Grant Lakebase permissions to your App's Service Principal**
-
-   After deploying, you need to ensure your app has access to the necessary Lakebase tables for memory. The Lakebase instance is already configured as a resource in `databricks.yml`, but you'll need to grant Postgres-level permissions on schemas and tables that were created during local testing.
-
-   > **Autoscaling Lakebase instances:** If your Lakebase instance is autoscaling (not provisioned), the postgres resource is **not yet supported** as a resource dependency in `databricks.yml`. After `databricks bundle run`, you must manually add the postgres resource to your app via the Databricks API, grant permissions, and then redeploy the app. See the [autoscaling Lakebase setup guide](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/lakebase) for detailed steps. Note that `databricks bundle deploy` will overwrite app resources, so you must re-add the postgres resource after each bundle deploy.
-
-   **For provisioned Lakebase instances**, run the following SQL commands on your Lakebase instance (replace `app-sp-id` with your app's service principal UUID):
 
    ```sql
    DO $$
