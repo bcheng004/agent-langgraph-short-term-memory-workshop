@@ -34,9 +34,9 @@ setup = [
     "ruamel.yaml>=0.18.0",
 ]
 
-[tool.uv]
-default-groups = ["dev", "setup"]
-index-url = "https://pypi-proxy.dev.databricks.com/simple/"
+# [tool.uv]
+# default-groups = ["dev", "setup"]
+# index-url = "https://pypi-proxy.dev.databricks.com/simple/"
 
 [project.scripts]
 quickstart = "scripts.quickstart:main"
@@ -45,3 +45,4 @@ start-server = "agent_server.start_server:main"
 agent-evaluate = "agent_server.evaluate_agent:evaluate"
 discover-tools = "scripts.discover_tools:main"
 preflight = "scripts.preflight:main"
+grant-lakebase-permissions = "scripts.grant_lakebase_permissions:main"

@@ -4,7 +4,7 @@ bundle:
 resources:
   apps:
     agent_langgraph_short_term_memory:
-      name: "bo-test"
+      name: "bo-agents-on-apps-workshop"
       description: "LangGraph agent application with short-term memory"
       source_code_path: ./
       config:
