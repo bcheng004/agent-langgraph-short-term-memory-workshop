@@ -11,7 +11,9 @@ dependencies = [
     "fastapi>=0.129.0",
     "uvicorn>=0.41.0",
     "litellm<=1.82.6",
-    "databricks-langchain[memory]>=0.17.0",
+    # "databricks-langchain[memory]>=0.17.0",
+    "databricks-langchain[memory] @ git+https://git@github.com/databricks/databricks-ai-bridge.git#subdirectory=integrations/langchain",
+    "databricks-ai-bridge[agent-server] @ git+https://github.com/databricks/databricks-ai-bridge.git@main",
     "databricks-sdk>=0.79.0",
     "databricks-agents==1.9.3",
     "mlflow>=3.10.0",
@@ -20,6 +22,9 @@ dependencies = [
     "python-dotenv>=1.2.1",
     "ruamel.yaml>=0.18.0",
 ]
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [build-system]
 requires = ["hatchling"]
