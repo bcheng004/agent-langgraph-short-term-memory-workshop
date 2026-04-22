@@ -1,5 +1,6 @@
 bundle:
   name: agent_langgraph_advanced
+  engine: direct
 
 resources:
   apps:
